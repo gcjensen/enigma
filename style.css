@@ -1,0 +1,43 @@
+.box {
+  margin-top: 20px;
+  width: 610px;
+  height: 280px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.button {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-size: 30px;
+  color: #535353;
+  background-color:#E0E0E0;
+  border:#AAAAAA 2px solid;
+}
+
+
+.whiteButtonOne {
+  width: 20px;
+  height: 30px;
+  background-color:white;
+  border:white 2px solid;
+}
+
+.whiteButtonTwo {
+  width: 40px;
+  height: 30px;
+  background-color:white;
+  border:white 2px solid;
+}
+
+h1 {
+  font-size:40px;
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-weight: 300;
+  position: relative;
+  margin-right: 40px;
+  margin-top: -5px;
+  color: #646464;
+}
