@@ -9,115 +9,112 @@
 //  Copyright (c) 2015 George Jensen. All rights reserved.
 //
 
-// class representing each rotor
-var Rotor = function(settings) {
-	this.base = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('')
-	// inner is the letters that the outer part
-	// of the rotor maps to
-	this.inner = settings[0].split('')
-	this.ringOffset = settings[1]
-	this.turnover = settings[2][0]
-	this.notch = settings[2][1]
-	var offset = this.ringOffset
-	while (offset--) {
-		this.rotate()
-	}
-	self.advance = false
-}
-
-Rotor.prototype.rotate = function() {
-	// remove first letter and put it on the end
-	this.base.push(this.base.shift())
-	this.inner.push(this.inner.shift())
-
-	if (this.base[0] == this.turnover) {
-		this.advance = true
-	}
-}
-
-// first pass through the rotor
-Rotor.prototype.rightToLeft = function(index) {
-  return this.base.indexOf(this.inner[index])
-};
-
-// second pass through the rotor
-Rotor.prototype.leftToRight = function(index) {
-  return this.inner.indexOf(this.base[index])
-};
-
-var Reflector = function(wiring) {
-  this.base = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('')
-  this.inner = wiring.split('')
-}
-
-// translates the input letter according to the wiring
-Reflector.prototype.translate = function(index) {
-  return this.inner.indexOf(this.base[index])
-}
-
-var Plugboard = function(wiring) {
-	this.base = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('')
-	this.wiring = wiring
-}
-
-Plugboard.prototype.swap = function(index) {
-	// if the giving letter is swapped in the plugboard
-	// it's pair is returned, otherwise nothing happens to it
-	if (this.base[index] in this.wiring) {
-		return this.base.indexOf(this.wiring[this.base[index]])
-	} else {
-		return index
-	}
-}
-
-var Enigma = function(rotors, reflector, plugboard) {
-	this.base = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	this.rotors = rotors
-	this.reflector = reflector
-	this.plugboard = plugboard
-}
-
-Enigma.prototype.encipher = function(c) {
-	// each key press causes the rotors to step
-	this.rotors[0].rotate()
-
-	// double step if notch has been reached
-	if (this.rotors[1].base[0] == this.rotors[1].notch) {
-		this.rotors[1].rotate()
-	}
-
-	// normal stepping
-	for (i = 0; i < this.rotors.length; i++) {
-		if (this.rotors[i].advance) {
-			this.rotors[i].advance = false
-			this.rotors[i + 1].rotate()
+function Rotor(settings) {
+		this.base = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('');
+		// inner is the letters that the outer part
+		// of the rotor maps to
+		this.inner = settings[0].split('');
+		var offset = settings[1];
+		this.turnover = settings[2][0];
+		this.notch = settings[2][1];
+		while (offset--) {
+			this.rotate();
 		}
-	}
-	// initially passes through plugboard
-	index = this.plugboard.swap(this.base.indexOf(c))
+		this.advance = false;
 
-	// first pass through each rotor
-	for (i = 0; i < this.rotors.length; i++) {
-		index = this.rotors[i].rightToLeft(index)
-	}
+		this.rotate = function() {
+			// remove first letter and put it on the end
+			this.base.push(this.base.shift());
+			this.inner.push(this.inner.shift());
 
-	// translated by the reflector
-	index = this.reflector.translate(index)
+			if (this.base[0] == this.turnover) {
+				this.advance = true;
+			}
+		};
 
-	// reverse pass through each rotor
-	for (i = this.rotors.length - 1; i >= 0; i--) {
-		index = this.rotors[i].leftToRight(index)
-	}
+		// first pass through the rotor
+		this.rightToLeft = function(index) {
+		  return this.base.indexOf(this.inner[index]);
+		};
 
-	// finishes by passing through plugboard again
-	c = this.base[this.plugboard.swap(index)]
+		// second pass through the rotor
+		this.leftToRight = function(index) {
+		  return this.inner.indexOf(this.base[index]);
+		};
+}
 
-	// change the previous 'lit up' letter back to white
-	document.getElementById(previous).style.background = "#E0E0E0"
-	// make new letter 'light up'
-	document.getElementById(c).style.background = "#FFFF00"
-	previous = c
-	return c
+function Reflector(wiring) {
+	  this.base = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('');
+	  this.inner = wiring.split('');
+
+		// translates the input letter according to the wiring
+		Reflector.prototype.translate = function(index) {
+		  return this.inner.indexOf(this.base[index]);
+		}
+}
+
+function Plugboard(wiring) {
+		this.base = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('');
+		this.wiring = wiring;
+
+		this.swap = function(index) {
+			// if the giving letter is swapped in the plugboard
+			// it's pair is returned, otherwise nothing happens to it
+			if (this.base[index] in this.wiring) {
+				return this.base.indexOf(this.wiring[this.base[index]]);
+			} else {
+				return index;
+			}
+		}
+}
+function Enigma(rotors, reflector, plugboard) {
+		this.base = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+		this.rotors = rotors
+		this.reflector = reflector
+		this.plugboard = plugboard
+
+		this.encipher = function(c) {
+			// each key press causes the rotors to step
+			this.rotors[0].rotate()
+
+			// double step if notch has been reached
+			if (this.rotors[1].base[0] == this.rotors[1].notch) {
+				this.rotors[1].rotate()
+			}
+
+			// normal stepping
+			for (i = 0; i < this.rotors.length; i++) {
+				if (this.rotors[i].advance) {
+					this.rotors[i].advance = false
+					this.rotors[i + 1].rotate()
+				}
+			}
+			// initially passes through plugboard
+			index = this.plugboard.swap(this.base.indexOf(c))
+
+			// first pass through each rotor
+			for (i = 0; i < this.rotors.length; i++) {
+				index = this.rotors[i].rightToLeft(index)
+			}
+
+			// translated by the reflector
+			index = this.reflector.translate(index)
+
+			// reverse pass through each rotor
+			for (i = this.rotors.length - 1; i >= 0; i--) {
+				index = this.rotors[i].leftToRight(index)
+			}
+
+			// finishes by passing through plugboard again
+			c = this.base[this.plugboard.swap(index)]
+
+			// change the previous 'lit up' letter back to white
+			document.getElementById(previous).style.background = "#E0E0E0"
+			// make new letter 'light up'
+			document.getElementById(c).style.background = "#FFFF00"
+			previous = c
+			return c
+		}
 }
 
 // keep track of previously pressed letter
