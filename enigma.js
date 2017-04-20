@@ -67,6 +67,7 @@ function Plugboard(wiring) {
 		}
 	}
 }
+
 function Enigma(rotors, reflector, plugboard) {
 	this.base = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	this.rotors = rotors
